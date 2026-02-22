@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: stg_transactions
+    columns:
+      - name: transaction_id
+        tests: [not_null, unique]
+
+  - name: stg_monthly_tgt
+    columns:
+      - name: achievement_pct
+        tests: [not_null]

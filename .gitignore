@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.env
+
+# Data files (optional – choose wisely)
+data/
+*.csv
+*.docx
+
+# dbt
+target/
+dbt_packages/
+
+# Airflow
+airflow.db
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VS Code settings
+.vscode/
