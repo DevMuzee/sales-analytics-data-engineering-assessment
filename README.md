@@ -1,6 +1,6 @@
 
 
-````markdown
+
 # Sales Analytics Pipeline
 
 ## Project Overview
@@ -24,7 +24,7 @@ graph TD
     B --> C[PostgreSQL: Raw Schema]
     C --> D[dbt: Staging Models]
     D --> E[dbt: Mart Models]
-    E --> F[Analytics / BI Tools]
+    E --> F[Apache Airflow]
     B -. Data Quality Flags .-> C
     D -. Tests / Validation .-> E
 ````
