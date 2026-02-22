@@ -1,0 +1,22 @@
+# ===== ETL & Data Manipulation =====
+pandas==2.1.1
+openpyxl==3.1.2
+SQLAlchemy==2.0.21
+psycopg2-binary==2.9.9
+
+# ===== dbt Core & Postgres Adapter =====
+dbt-core==1.11.6
+dbt-postgres==1.11.6
+
+# ===== Apache Airflow =====
+apache-airflow==2.9.3
+apache-airflow-providers-postgres==2.5.0
+
+# ===== Utilities =====
+python-dotenv==1.0.0
+tabulate==0.9.0
+
+# ===== Optional: Dev / Testing =====
+pytest==7.4.0
+black==23.7.0
+flake8==6.1.0
