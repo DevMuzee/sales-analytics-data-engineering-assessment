@@ -135,9 +135,10 @@ ORDER BY total_revenue_ngn DESC
 
 ---
 
-## Airflow DAG Orchestration
+## Apache Airflow DAG Orchestration
 
 **Location:** `airflow/dags/sales_pipeline_dag.py`
+**Purpose**: `Orchestrates ETL → dbt pipeline, retries tasks, alerts on failure`
 **Features:**
 
 * PythonOperator → Runs ETL (`main.py`)
@@ -145,6 +146,60 @@ ORDER BY total_revenue_ngn DESC
 * Retry logic: 3 retries, 5 min delay
 * Failure alerts via email
 * DAG scheduling: Daily, `catchup=False`
+
+## Airflow Setup (WSL/Linux Recommended)
+
+**Key Steps I followed:**
+
+1. Removed broken/partial installations:
+```bash
+rm -rf ~/airflow_runtime
+```
+
+2. Created a clean WSL directory for Airflow:
+```bash
+mkdir ~/airflow_runtime
+cd ~/airflow_runtime
+python3.10 -m venv venv_airflow
+source venv_airflow/bin/activate
+```
+
+3. Installed Airflow with official constraints:
+```bash
+pip install "apache-airflow==2.9.3" \
+  --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.9.3/constraints-3.10.txt
+```
+4. Set `AIRFLOW_HOME` and initialized the metadata DB:
+```bash
+export AIRFLOW_HOME=~/airflow_runtime/airflow
+airflow db init
+```
+
+> Encountered issues like no such table: dag and slot_pool due to partial DB creation, resolved by resetting the DB:
+```bash
+airflow db reset
+```
+
+5. Copied DAGs from local project (avoiding OneDrive paths):
+
+```bash
+cp "/mnt/c/Users/TGOPS/OneDrive - Tolaram Pte Ltd/Project compilation/sales_analytics_pipeline/airflow/dags/sales_pipeline.py" ~/airflow_runtime/airflow/dags/
+```
+
+6. Started Airflow standalone:
+```bash
+airflow standalone
+```
+
+7. Verified DAGs:
+```bash
+airflow dags list
+airflow dags list-import-errors
+```
+
+> Ensured all Python dependencies (pandas, psycopg2-binary, dbt-core) were installed in the venv to avoid import errors.
+
+**Note**: All Airflow runtime files (`venv_airflow/, airflow.db, logs/`) are environment-specific and not pushed to GitHub; only DAGs and helper modules are tracked.
 
 **Note:** Airflow uses **Python 3.10** to avoid conflicts; ETL/dbt run on Python 3.11+.
 
@@ -189,8 +244,8 @@ dbt test
 
 ```bash
 # Python 3.10 virtual environment for Airflow
-python3.10 -m venv airflow/venv_airflow
-# Activate venv
+# Activate Airflow venv
+source ~/airflow_runtime/venv_airflow/bin/activate
 # Windows
 airflow\venv_airflow\Scripts\activate
 # Linux/Mac
@@ -202,8 +257,10 @@ pip install -r requirement.txt
 # Start Airflow
 cd airflow
 airflow standalone
-```
 
+#Check DAGs
+airflow dags list
+```
 ---
 
 ## Key Engineering Highlights
@@ -223,7 +280,6 @@ sales-analytics-pipeline/
 ├── .env                   # DB credentials
 ├── data/                  # Excel source file
 ├── src/                   # Python ETL
-│   ├── main.py
 │   ├── extract.py
 │   ├── transform.py
 │   ├── load.py
@@ -239,7 +295,7 @@ sales-analytics-pipeline/
 │   │   └── sales_pipeline_dag.py
 │   └── venv_airflow/
 ├── requirements.txt       # ETL + dbt dependencies
-├── requirements_airflow.txt # Airflow dependencies
+├── main.py
 └── README.md
 ```
 

@@ -4,6 +4,7 @@ __pycache__/
 *.pyo
 *.pyd
 venv/
+venv_airflow/ 
 .env
 
 # Data files (optional – choose wisely)
