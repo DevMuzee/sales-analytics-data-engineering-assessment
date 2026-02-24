@@ -3,8 +3,9 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.whl
 venv/
-venv_airflow/ 
+airflow/venv_airflow/ 
 .env
 
 # Data files (optional – choose wisely)
